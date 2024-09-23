@@ -40,3 +40,19 @@ def jmp_adder(reset, jmp_addr, shl, read_addr):
             jmp_adder.next = read_addr + shl
 
     return jadder
+
+'''
+program counter sel mux - if pc_sel is high, then the next program instruction execution moved to the jump address
+else it is incremented to the next PC
+'''
+@block
+def pc_mux(pc_addr, jmp_addr, pc_sel, reset, pc):
+
+    @always_comb
+    def pmux():
+        if reset.next == INACTIVE_HIGH:
+            if pc_sel:
+                pc.next = jmp_addr
+            else:
+                pc.next = pc_addr
+    return pmux
