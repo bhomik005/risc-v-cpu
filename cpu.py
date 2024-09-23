@@ -80,3 +80,19 @@ def pc_assign(reset, read_addr, pc):
         if reset.next == INACTIVE_HIGH:
             read_addr.next = pc
     return assign
+
+'''
+ALU second input selection mux
+needs to choose between the register data b or immediate value
+'''
+@block
+def alu_mux(reset, alu_src, rdx, rdb, im_gen):
+
+    @always_comb
+    def amux():
+        if reset.next == INACTIVE_HIGH:
+            if alu_src:
+                rdx.next = im_gen
+            else:
+                rdx.next = rdb
+    return amux
