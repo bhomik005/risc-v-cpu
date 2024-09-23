@@ -56,3 +56,27 @@ def pc_mux(pc_addr, jmp_addr, pc_sel, reset, pc):
             else:
                 pc.next = pc_addr
     return pmux
+
+@block
+def taken(result, brnch, pc_sel):
+
+    @always_comb
+    def take():
+        if (not result) and (brnch):
+            pc_sel.next = True  # branch is taken
+        else:
+            pc_sel.next = False # branch is not taken
+
+    return take
+
+'''
+this module assigns next PC to the instruction data memory, triggering the start of the next instruction execution
+'''
+@block
+def pc_assign(reset, read_addr, pc):
+
+    @always_comb
+    def assign():
+        if reset.next == INACTIVE_HIGH:
+            read_addr.next = pc
+    return assign
